@@ -8,59 +8,82 @@ class Event:
         self.name_event: str = ""
         self.date_event: str = ""
         self.event: dict = {}
+        self.list_events: list = []
+        self.count: int = 0
+        self.new_event: str = ""
         self.date_object: datetime = None
 
     def create_event(self):
+
         self.name_event = input("Ingrese el nombre del evento: ")
         self.date_event = input("Ingrese la fecha del evento: ")
 
         self.date_format = "%d-%m-%Y"
 
         self.date_object = datetime.strptime(self.date_event, self.date_format)
-
+        
         self.event[self.name_event]=self.date_object
+        self.list_events.append(self.event)
 
-        return self.event
+        #Comprobracion para evitar eventos duplicado dentro de la lista.
+        if self.event not in self.list_events:
+            raise ValueError("Evento no encontrado")
+
+        return self.list_events
 
     def view_event(self):
-        print(self.event)
+
+        if len(self.list_events) == 0:
+            print("No hay enventos para mostrar")
+        
+        for index, event in enumerate(self.list_events):
+            print(f"Index:{index} --> Event:{event}")
 
     def delete_event(self):
 
-        self.name_event_delete = input("Ingrese el nombre del evento a eliminar: ")
- 
-        for index,result in enumerate(self.event):
-            if self.name_event_delete not in self.event:
-                raise ValueError("Evento no encontrado")
+        if len(self.list_events) == 0:
+            print("No hay eventos guardados para borrar")
+        else:
+            self.index_event_delete = int(input("Ingrese indice del evento a eliminar: "))
+            for index, event in enumerate(self.list_events):
+                if self.index_event_delete != index:
+                    raise ValueError("Evento no encontrado")
 
-        del self.event[self.name_event_delete]
+            del self.list_events[index]
 
     def update_event(self):
 
-        self.name_event_for_update = input("Ingrese el nombre del evento a Actualizar: ")
+        self.index_event_for_update = int(input("Ingrese el indice del evento a Actualizar: "))
+        for index, event in enumerate(self.list_events):
+            if self.index_event_for_update != index:
+                print("Evento no encontrado")
+            else:
+                del self.list_events[self.index_event_for_update]
 
-        for index, result in enumerate(self.event):
-            if self.name_event_for_update not in self.event:
-                raise ValueError("Evento no encontrado")
+                self.name_event_update = input("Ingrese el nuevo nombre para el evento: ")
+                self.date_event_update = input("Ingrese la nueva fecha para el evento: ")
 
-        self.name_event_update = input("Ingrese el nuevo nombre del evento: ")
-        self.event[self.name_event_update]=self.date_object
-        del self.event[self.name_event_for_update]
+                self.date_format = "%d-%m-%Y"
 
-        return self.event
+                self.date_object = datetime.strptime(self.date_event_update, self.date_format)
+
+                new_event = {self.name_event_update: self.date_object}
+                self.list_events.append(new_event)
+
+        return self.list_events
 
 
 event = Event()
 
 while True:
-    print("____MENU____")
-    print("Crear evento")
-    print("Ver eventos")
-    print("Eliminar evento")
-    print("Actualizar evento")
-    print("Salir")
+    print("-----MENU-----\n")
+    print("1.Crear evento")
+    print("2.Ver eventos")
+    print("3.Eliminar evento")
+    print("4.Actualizar evento")
+    print("5.Salir\n")
 
-    option = input("Ingrese una opción: ")
+    option = input("\nIngrese una opción: ")
 
     match option:
         case "1":
