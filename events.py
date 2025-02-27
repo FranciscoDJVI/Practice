@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 class Event:
 
     def __init__(self):
@@ -35,6 +34,7 @@ class Event:
 
 
     def view_event(self):
+        #Comprovacion para poder mostrar eventos.
         try:
             if len(self.list_events) == 0:
                 print("No hay enventos para mostrar")
@@ -46,7 +46,7 @@ class Event:
             return
 
     def delete_event(self):
-
+        #Comprovacion para poder eliminar eventos.
         try:
             if len(self.list_events) == 0:
                 print("No hay eventos guardados para eliminar")
@@ -55,13 +55,13 @@ class Event:
                 for index, event in enumerate(self.list_events):
                     if self.index_event_delete != index:
                         raise ValueError("Evento no encontrado")
-
                 del self.list_events[index]
         except:
             print("Crea algun evento, para poder eliminar")
             return
 
     def update_event(self):
+        #Comprovacion para poder Actualizar enventos.
         try:
             if len(self.list_events) == 0:
                 print("No hay eventos guardados para Actualizar")
@@ -79,10 +79,9 @@ class Event:
                     self.date_format = "%d-%m-%Y"
 
                     self.date_object = datetime.strptime(self.date_event_update, self.date_format)
-
+                    #Creaccion de un nuevo diccionario para cada actuaizacion.
                     new_event = {self.name_event_update: self.date_object}
                     self.list_events.append(new_event)
-
             return self.list_events
         except:
             print("Crea algun evento para poder Actualizar")
