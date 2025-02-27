@@ -4,32 +4,35 @@ from datetime import datetime
 class Event:
 
     def __init__(self):
-
-        self.name_event: str = ""
-        self.date_event: str = ""
-        self.event: dict = {}
-        self.list_events: list = []
-        self.count: int = 0
-        self.new_event: str = ""
-        self.date_object: datetime = None
+        self.event: dict = {} #Diccionario para almacenar los eventos(nombre: fecha)
+        self.list_events: list = [] #Lista de dicionarios.
 
     def create_event(self):
-
         self.name_event = input("Ingrese el nombre del evento: ")
-        self.date_event = input("Ingrese la fecha del evento: ")
-
+        self.date_event = input("Ingresa la fecha del evento (dd-mm-aaaa): ")
         self.date_format = "%d-%m-%Y"
 
-        self.date_object = datetime.strptime(self.date_event, self.date_format)
+        #Comprovacion para el ingreso de la fecha en el formaro correcto.
+        try:
+            self.date_object = datetime.strptime(self.date_event, self.date_format)
+        except:
+            print("Formato de fecha correcto. Use dd-mm-aaaa.")
+            return
+
+        event_data = {"name": self.name_event, "date": self.date_object}
         
-        self.event[self.name_event]=self.date_object
-        self.list_events.append(self.event)
+        #Comprovacion para evento existente con fechas iguales.
+        if self.name_event in self.event and self.event[self.name_event] == self.date_object:
+            print(f"El evento {self.name_event} con esa fecha ya existe.😪")
+            return
+        #Comprovacion para evento existente con fecha diferente.
+        elif self.name_event in self.event:
+            print(f"El evento {self.name_event} ya existe, pero con otra fecha.")
 
-        #Comprobracion para evitar eventos duplicado dentro de la lista.
-        if self.event not in self.list_events:
-            raise ValueError("Evento no encontrado")
+        self.event[self.name_event] = self.date_object
+        self.list_events.append(event_data)
+        print(f"Evento {self.name_event} creado con èxito.")
 
-        return self.list_events
 
     def view_event(self):
 
@@ -40,17 +43,22 @@ class Event:
             print(f"Index:{index} --> Event:{event}")
 
     def delete_event(self):
+        
+        try:
+            if len(self.list_events) == 0:
+                print("No hay eventos guardados para eliminar")
+            
+            else:
+                self.index_event_delete = int(input("Ingrese indice del evento a eliminar: "))
+                for index, event in enumerate(self.list_events):
+                    if self.index_event_delete != index:
+                        raise ValueError("Evento no encontrado")
 
-        if len(self.list_events) == 0:
-            print("No hay eventos guardados para borrar")
-        else:
-            self.index_event_delete = int(input("Ingrese indice del evento a eliminar: "))
-            for index, event in enumerate(self.list_events):
-                if self.index_event_delete != index:
-                    raise ValueError("Evento no encontrado")
-
-            del self.list_events[index]
-
+                del self.list_events[index]
+        except:
+            print("Crea algun evento, para poder eliminar")
+            return
+           
     def update_event(self):
 
         self.index_event_for_update = int(input("Ingrese el indice del evento a Actualizar: "))
